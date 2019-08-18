@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>hello</title>
+    <meta charset="utf-8">
+</head>
+
+<body>
+    <h1>User</h1>
+
+    <div>
+        <input id="username" type="text" placeholder="用户名" value="">
+        <input id="password" type="text" placeholder="密码" value="">
+        <input onclick="addUser()" type="button" value="确定">
+    </div>
+    <ul id="ul" style="width:500px; margin-top:30px;">
+        
+    </ul>
+</body>
+
+
+<script>
+    
+
+    //1.获取所有用户
+    fetch('/user').then(res=>{
+        return res.json();
+    }).then(data=>{
+        //业务逻辑部分
+        console.log(data);
+        let str = '';
+        data.forEach(item => {
+            str += `
+                <li style="height:30px; border-bottom:1px solid #ddd; padding-top:7px;">
+                    <span>用户名：${item.username}</span>
+                    <span style="margin-left:30px;">密码：${item.password}</span>
+                    <input type="button" value="删除" style="float:right;" onclick="removeUser(${item.id},event)">
+                </li>
+            `;
+        });
+        document.getElementById('ul').innerHTML = str;
+    }).catch(err=>{
+        console.log(err);
+    })
+
+
+    //2. 点击按钮增加用户
+    let username = document.getElementById('username');
+    let password = document.getElementById('password');
+    function addUser() {
+        fetch('/user',{
+            method:'POST',
+            body:JSON.stringify({username:username.value,password:password.value})
+        }).then(res=>{
+            return res.json();
+        }).then(data=>{
+            //业务逻辑部分
+            console.log(data);
+            let str = `
+                    <li style="height:30px; border-bottom:1px solid #ddd; padding-top:7px;">
+                        <span>用户名：${data.username}</span>
+                        <span style="margin-left:30px;">密码：${data.password}</span>
+                        <input type="button" value="删除" style="float:right;" onclick="removeUser(${data.id},event)">
+                    </li>
+                `;
+            let vDiv = document.createElement('div');
+            vDiv.innerHTML = str;
+            document.getElementById('ul').appendChild(vDiv.firstElementChild);
+        }).catch(err=>{
+            console.log(err);
+        })
+    }
+
+
+    //3. 点击按钮删除用户
+    function removeUser(id,e) {
+        fetch('/user?id='+id,{
+            method:'DELETE'
+        }).then(res=>{
+            return res.json();
+        }).then(data=>{
+            //业务逻辑部分
+            console.log(data);
+            
+            document.getElementById('ul').removeChild(e.target.parentNode);
+        }).catch(err=>{
+            console.log(err);
+        })
+    }
+
+
+</script>
+</html>

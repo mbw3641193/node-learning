@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>hello</title>
+    <meta charset="utf-8">
+</head>
+
+<body>
+    <h1>JSONP</h1>
+
+</body>
+<script>
+    function func(data) {
+        console.log(data);
+    }
+
+
+    //------------------jsonp----------------------
+    //script转化后的写法，意思是一样的，看着比较牛逼
+    let oScript = document.createElement('script');
+    oScript.src = 'http://localhost:3000/jsonp?callback=func';
+    document.body.appendChild(oScript);
+
+    //以上就是jsonp--------------end-------------------
+
+</script>
+
+<!-- 通过script标签进行跨域 -->
+<!-- <script src="http://localhost:3000/jsonp?callback=func"></script> 这种写法比较简陋，转化为上面的写法 -->
+
+</html>

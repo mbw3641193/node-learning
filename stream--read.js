@@ -5,8 +5,8 @@
 let fs = require('fs');
 
 //highWaterMark 每次能读取多少 默认64k 默认不需要更改 默认是buffer类型
-// let rs = fs.createReadStream('test/test2.txt');
-let rs = fs.createReadStream('test/test2.txt',{highWaterMark:1}); //默认不需要更改  
+let rs = fs.createReadStream('test/test2.txt');
+// let rs = fs.createReadStream('test/test2.txt',{highWaterMark:1}); //默认不需要更改  
 //需要监听事件  数据到来的事件 rs.emit('data',数据);
 // console.log(rs);
 
@@ -37,3 +37,24 @@ rs.on('end',()=>{
     console.log(Buffer.concat(arr).toString());
     console.log('end');
 })
+
+//--------------------------------------------------
+//读取流的时候报错
+rs.on('err',(err)=>{
+    console.log(err);
+})
+
+//控制流的速度
+
+rs.on('data',(chunk)=>{  
+    
+    rs.pause();  //暂停 -- 暂停的是data的触发
+
+})
+
+setTimeout(() => {
+    rs.resume();  //恢复
+}, 1000);
+
+
+
